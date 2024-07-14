@@ -1,75 +1,39 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Text, useGLTF } from "@react-three/drei";
-
-function Shiba() {
-  const gltf = useGLTF("/shiba/scene.gltf");
-  const ref = useRef();
-  const [isTumbling, setIsTumbling] = useState(false);
-  const [rotationX, setRotationX] = useState(0);
-
-  useEffect(() => {
-    if (isTumbling) {
-      console.log(ref.current);
-      const targetRotation = ref.current.rotation.y + Math.PI * 2;
-      const startTime = Date.now();
-
-      const animate = () => {
-        const elapsed = Date.now() - startTime;
-        const duration = 1000; // 1 second
-        const progress = Math.min(elapsed / duration, 1);
-        ref.current.rotation.x = rotationX - (targetRotation + rotationX) * progress;
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          setIsTumbling(false);
-          setRotationX(ref.current.rotation.y);
-        }
-      };
-
-      requestAnimationFrame(animate);
-    }
-  }, [isTumbling, rotationX]);
-
-  const handleClick = () => {
-    if (!isTumbling) {
-      setIsTumbling(true);
-    }
-  };
-
-  return <primitive ref={ref} object={gltf.scene} onClick={handleClick} />;
-}
-
-function Box(props) {
-  const ref = useRef();
-  const [color, setColor] = useState(0);
-  useFrame(() => {
-    ref.current.rotation.x += 0.01;
-    ref.current.rotation.y += 0.01;
-    const c = (Math.sin(color) + 1) / 2;
-    ref.current.material.color.setRGB(c, 0, 1 - c);
-    setColor(color + 0.01);
-  });
-
-  return (
-    <mesh {...props} ref={ref}>
-      <boxGeometry />
-      <meshBasicMaterial />
-    </mesh>
-  );
-}
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, Text } from "@react-three/drei";
+import { Physics } from "@react-three/cannon";
+import { useState } from "react";
+import { Sphere } from "./components/Sphere";
+import { Ground } from "./components/Ground";
+import { Wall } from "./components/Wall";
 
 function App() {
+  const [spheres, setSpheres] = useState([<Sphere />]);
+
+  const addSpheres = () => {
+    let size = Math.random(1);
+    size = size < 0.1 ? 0.1 : size;
+    console.log(size);
+    setSpheres((cur) => [...cur, <Sphere size={size} />]);
+  };
+
   return (
-    <Canvas camera={{ position: [0, 0, 2.5], fov: 75 }}>
-      <Text position={[0, 1, 0]} fontSize={0.4} fontWeight={700} color="black">
-        시바견
-      </Text>
-      <ambientLight />
-      <Shiba />
-      <OrbitControls />
-    </Canvas>
+    <div style={{ marginTop: "80px", height: "400px" }}>
+      <button onClick={addSpheres}>구 생성</button>
+      <button onClick={() => setSpheres([])}>초기화</button>
+      <Canvas camera={{ position: [0, 10, 40], fov: 15 }}>
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[10, 10, 5]} intensity={1} castShadow />
+        <Physics>
+          <Ground />
+          <Wall position={[0, 2.5, -5]} rotation={[0, 0, 0]} opacity={100} />
+          <Wall position={[0, 2.5, 5]} rotation={[0, Math.PI, 0]} opacity={0} />
+          <Wall position={[-5, 2.5, 0]} rotation={[0, Math.PI / 2, 0]} opacity={100} />
+          <Wall position={[5, 2.5, 0]} rotation={[0, -Math.PI / 2, 0]} opacity={100} />
+          {spheres.map((sphere) => sphere)}
+        </Physics>
+        <OrbitControls />
+      </Canvas>
+    </div>
   );
 }
 
