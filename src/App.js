@@ -2,7 +2,6 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Text } from "@react-three/drei";
 import { Physics } from "@react-three/cannon";
 import { useEffect, useState } from "react";
-import { Sphere } from "./components/Sphere";
 import { Ground } from "./components/Ground";
 import { Wall } from "./components/Wall";
 import { Dice } from "./components/Dice";
@@ -10,8 +9,14 @@ import { Dice } from "./components/Dice";
 function App() {
   const [dices, setDices] = useState([]);
   const [gauge, setGauge] = useState(0);
+  const [results, setResults] = useState([]);
   const [isPressing, setIsPressing] = useState(false);
   const [numberOfDices, setNumberOfDices] = useState(2);
+
+  const reset = () => {
+    setResults([]);
+    setDices([]);
+  };
 
   const throwDice = () => {
     setDices([]);
@@ -21,7 +26,10 @@ function App() {
         4,
         Math.random() * 8 - 4, // -4 ~ 4 사이의 값
       ];
-      setDices((cube) => [...cube, <Dice key={cube.length} gauge={gauge} position={position} />]);
+      setDices((cube) => [
+        ...cube,
+        <Dice key={cube.length} gauge={gauge} position={position} setResults={setResults} />,
+      ]);
     }
   };
 
@@ -38,13 +46,30 @@ function App() {
     return () => clearInterval(interval);
   }, [isPressing]);
 
+  const formattedResults = results.reduce((acc, result, index) => {
+    if (index === results.length - 1) {
+      return acc + result + " = ";
+    } else {
+      return acc + result + " + ";
+    }
+  }, "");
+
+  // 결과 값의 합계 계산
+  const sum = results.reduce((acc, curr) => acc + curr, 0);
+
   return (
     <div style={{ marginTop: "80px", height: "400px" }}>
+      <div style={{ position: "absolute", width: "100%", display: "flex", justifyContent: "center", zIndex: "-999" }}>
+        <span>
+          {results.length > 1 && formattedResults}
+          {sum}
+        </span>
+      </div>
       <input
         type="number"
         value={numberOfDices}
         onChange={(e) => {
-          setDices([]);
+          reset();
           setNumberOfDices(parseInt(e.target.value));
         }}
         min="1"
@@ -60,14 +85,10 @@ function App() {
       >
         주사위 굴리기
       </button>
-      <button
-        onClick={() => {
-          setDices([]);
-        }}
-      >
-        초기화
-      </button>
-      <div>게이지: {gauge}</div>
+      <button onClick={reset}>초기화</button>
+      <div>
+        <span>게이지: {gauge}</span>
+      </div>
       <Canvas camera={{ position: [0, 50, 0], fov: 15 }} shadows>
         <ambientLight intensity={0.5} />
         <directionalLight position={[0, 100, 70]} intensity={1} castShadow />
