@@ -59,7 +59,17 @@ function App() {
 
   return (
     <div style={{ marginTop: "80px", height: "400px" }}>
-      <div style={{ position: "absolute", width: "100%", display: "flex", justifyContent: "center", zIndex: "-999" }}>
+      <div
+        style={{
+          position: "absolute",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          zIndex: "-999",
+          top: "50px",
+          fontSize: "18px",
+        }}
+      >
         <span>
           {results.length > 1 && formattedResults}
           {sum}
