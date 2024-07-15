@@ -12,7 +12,7 @@ export const Sphere = ({ size }) => {
   }));
 
   const handleClick = () => {
-    api.applyImpulse([-2, 100, 0], [0, 0, 0]);
+    api.applyImpulse([-30, 100, 0], [0, 0, 0]);
   };
 
   return (
