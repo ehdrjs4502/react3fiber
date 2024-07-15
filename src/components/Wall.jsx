@@ -6,7 +6,7 @@ export const Wall = ({ position, rotation, opacity }) => {
     position: position,
   }));
   return (
-    <mesh ref={ref} receiveShadow castShadow={opacity === 0 ? false : true}>
+    <mesh ref={ref}>
       <boxGeometry args={[10, 5, 0.2]} />
       <meshStandardMaterial transparent opacity={opacity} />
     </mesh>

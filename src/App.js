@@ -43,7 +43,10 @@ function App() {
       <input
         type="number"
         value={numberOfDices}
-        onChange={(e) => setNumberOfDices(parseInt(e.target.value))}
+        onChange={(e) => {
+          setDices([]);
+          setNumberOfDices(parseInt(e.target.value));
+        }}
         min="1"
         max="10"
       />
@@ -65,13 +68,13 @@ function App() {
         초기화
       </button>
       <div>게이지: {gauge}</div>
-      <Canvas camera={{ position: [0, 30, 40], fov: 15 }} shadows>
+      <Canvas camera={{ position: [0, 50, 0], fov: 15 }} shadows>
         <ambientLight intensity={0.5} />
         <directionalLight position={[0, 100, 70]} intensity={1} castShadow />
         <Physics gravity={[0, -30, 0]} defaultContactMaterial={{ restitution: 0.4 }}>
           <Ground />
           <Wall position={[0, 2.5, -5]} rotation={[0, 0, 0]} opacity={100} />
-          <Wall position={[0, 2.5, 5]} rotation={[0, Math.PI, 0]} opacity={0} />
+          <Wall position={[0, 2.5, 5]} rotation={[0, Math.PI, 0]} opacity={100} />
           <Wall position={[-5, 2.5, 0]} rotation={[0, Math.PI / 2, 0]} opacity={100} />
           <Wall position={[5, 2.5, 0]} rotation={[0, -Math.PI / 2, 0]} opacity={100} />
           {dices.map((cube) => cube)}
