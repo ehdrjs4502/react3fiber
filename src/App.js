@@ -82,6 +82,12 @@ function App() {
           throwDice();
           setGauge(0);
         }}
+        onTouchStart={() => setIsPressing(true)}
+        onTouchEnd={() => {
+          setIsPressing(false);
+          throwDice();
+          setGauge(0);
+        }}
       >
         주사위 굴리기
       </button>
