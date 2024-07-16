@@ -9,9 +9,9 @@ import { Dice } from "./components/Dice";
 function App() {
   const [dices, setDices] = useState([]);
   const [gauge, setGauge] = useState(0);
-  const [results, setResults] = useState([]);
   const [isPressing, setIsPressing] = useState(false);
   const [numberOfDices, setNumberOfDices] = useState(2);
+  const [results, setResults] = useState([]);
 
   const reset = () => {
     setResults([]);
@@ -23,7 +23,7 @@ function App() {
     for (let i = 0; i < numberOfDices; i++) {
       const position = [
         Math.random() * 8 - 4, // -4 ~ 4 사이의 값
-        4,
+        Math.random() * 4 + 5,
         Math.random() * 8 - 4, // -4 ~ 4 사이의 값
       ];
       setDices((cube) => [
@@ -108,13 +108,13 @@ function App() {
       <Canvas camera={{ position: [0, 50, 0], fov: 15 }} shadows>
         <ambientLight intensity={0.5} />
         <directionalLight position={[0, 100, 70]} intensity={1} castShadow />
-        <Physics gravity={[0, -30, 0]} defaultContactMaterial={{ restitution: 0.4 }}>
+        <Physics gravity={[0, -30, 0]} defaultContactMaterial={{ restitution: 0.3 }}>
           <Ground />
           <Wall position={[0, 2.5, -5]} rotation={[0, 0, 0]} opacity={100} />
           <Wall position={[0, 2.5, 5]} rotation={[0, Math.PI, 0]} opacity={100} />
           <Wall position={[-5, 2.5, 0]} rotation={[0, Math.PI / 2, 0]} opacity={100} />
           <Wall position={[5, 2.5, 0]} rotation={[0, -Math.PI / 2, 0]} opacity={100} />
-          {dices.map((cube) => cube)}
+          {dices.map((dice) => dice)}
         </Physics>
         <OrbitControls />
       </Canvas>
