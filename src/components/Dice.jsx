@@ -10,7 +10,8 @@ export const Dice = ({ gauge, position, setResults }) => {
   const [ref, api] = useBox(() => ({
     mass: 10,
     position: position,
-    args: [1, 1, 1],
+    // args: [1, 1, 1],
+
     friction: 0.2,
     restitution: 0.7,
   }));
@@ -19,7 +20,7 @@ export const Dice = ({ gauge, position, setResults }) => {
     const rad = Math.random() * Math.PI * 2;
     const x = Math.cos(rad) * gauge;
     const z = Math.sin(rad) * gauge;
-    api.applyImpulse([x, 100, z], [0, 0, 0]);
+    api.applyImpulse([x, 150, z], [0, 0, 0]);
     api.applyImpulse([0, Math.random() * 5, 0], [x, 0, z]);
   }, [api, gauge]);
 
@@ -100,6 +101,21 @@ export const Dice = ({ gauge, position, setResults }) => {
       }
     });
   }, [api]);
+
+  useEffect(() => {
+    if (scene) {
+      // 바운딩 박스 생성
+      const box = new THREE.Box3().setFromObject(scene);
+
+      // 바운딩 박스 크기 계산
+      const size = new THREE.Vector3();
+      box.getSize(size);
+
+      console.log("Model size:", size);
+    }
+  }, [scene]);
+
+  console.log(copiedScene);
 
   return <primitive object={copiedScene} ref={ref} scale={[0.05, 0.05, 0.05]} />;
 };
