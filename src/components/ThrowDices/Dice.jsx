@@ -1,6 +1,6 @@
-import { useBox, useSphere } from "@react-three/cannon";
+import { useBox } from "@react-three/cannon";
 import { useGLTF } from "@react-three/drei";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 
 export const Dice = ({ gauge, position, setResults }) => {
@@ -114,8 +114,6 @@ export const Dice = ({ gauge, position, setResults }) => {
       console.log("Model size:", size);
     }
   }, [scene]);
-
-  console.log(copiedScene);
 
   return <primitive object={copiedScene} ref={ref} scale={[0.05, 0.05, 0.05]} />;
 };
