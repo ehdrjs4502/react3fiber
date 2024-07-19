@@ -3,11 +3,17 @@ import { useGLTF } from "@react-three/drei";
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 
-export const Dice = ({ gauge, position, setResults }) => {
+interface IProps {
+  gauge: number;
+  position: [x: number, y: number, z: number];
+  setResults: React.Dispatch<React.SetStateAction<number[]>>;
+}
+
+export const Dice = ({ gauge, position, setResults }: IProps) => {
   const { scene } = useGLTF("/dice/scene.gltf");
 
   const copiedScene = useMemo(() => scene.clone(), [scene]);
-  const [ref, api] = useBox(() => ({
+  const [ref, api] = useBox<THREE.Mesh>(() => ({
     mass: 10,
     position: position,
     // args: [1, 1, 1],
@@ -27,16 +33,14 @@ export const Dice = ({ gauge, position, setResults }) => {
   useEffect(() => {
     if (copiedScene) {
       copiedScene.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-        }
+        child.castShadow = true;
       });
     }
   }, [copiedScene]);
 
   const calculateFacePositions = () => {
     // 각 면의 위치를 저장할 배열 초기화
-    const facePositions = [];
+    const facePositions: THREE.Vector3[] = [];
 
     // 각 면의 법선 벡터 정의
     const faceNormals = [
@@ -50,7 +54,7 @@ export const Dice = ({ gauge, position, setResults }) => {
 
     // 객체의 현재 회전을 나타내는 쿼터니언 가져오기
     const quaternion = new THREE.Quaternion();
-    ref.current.getWorldQuaternion(quaternion);
+    ref!.current!.getWorldQuaternion(quaternion);
 
     // 각 법선 벡터에 대해 반복하여 면의 위치 계산
     faceNormals.forEach((normal) => {
@@ -58,7 +62,7 @@ export const Dice = ({ gauge, position, setResults }) => {
       const rotatedNormal = normal.clone().applyQuaternion(quaternion);
 
       // 객체의 위치에 회전된 법선 벡터를 더하여 면의 위치 계산
-      const facePosition = new THREE.Vector3().copy(ref.current.position).add(rotatedNormal);
+      const facePosition = new THREE.Vector3().copy(ref!.current!.position).add(rotatedNormal);
 
       // 계산된 면의 위치를 배열에 추가
       facePositions.push(facePosition);
@@ -69,7 +73,7 @@ export const Dice = ({ gauge, position, setResults }) => {
   };
 
   const handleSleep = () => {
-    const diceScale = {
+    const diceScale: { [key: number]: number } = {
       0: 1,
       1: 6,
       2: 2,

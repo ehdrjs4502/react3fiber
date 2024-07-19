@@ -1,17 +1,24 @@
+import React, { useEffect, useState, useRef, ReactNode } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Text } from "@react-three/drei";
+import { OrbitControls, Text, useGLTF } from "@react-three/drei";
 import { Physics } from "@react-three/cannon";
-import { useEffect, useState } from "react";
 import { Ground } from "../components/Ground";
 import { Wall } from "../components/Wall";
 import { Dice } from "../components/ThrowDices/Dice";
 
-export const ThrowDices = () => {
-  const [dices, setDices] = useState([]);
-  const [gauge, setGauge] = useState(0);
-  const [isPressing, setIsPressing] = useState(false);
-  const [numberOfDices, setNumberOfDices] = useState(2);
-  const [results, setResults] = useState([]);
+// 주사위 컴포넌트의 props 타입 정의
+interface DiceProps {
+  gauge: number;
+  position: [number, number, number];
+  setResults: React.Dispatch<React.SetStateAction<number[]>>;
+}
+
+export const ThrowDices: React.FC = () => {
+  const [dices, setDices] = useState<ReactNode[]>([]);
+  const [gauge, setGauge] = useState<number>(0);
+  const [isPressing, setIsPressing] = useState<boolean>(false);
+  const [numberOfDices, setNumberOfDices] = useState<number>(2);
+  const [results, setResults] = useState<number[]>([]);
 
   const reset = () => {
     setResults([]);
@@ -21,7 +28,7 @@ export const ThrowDices = () => {
   const throwDice = () => {
     setDices([]);
     for (let i = 0; i < numberOfDices; i++) {
-      const position = [
+      const position: [number, number, number] = [
         Math.random() * 8 - 4, // -4 ~ 4 사이의 값
         Math.random() * 4 + 5,
         Math.random() * 8 - 4, // -4 ~ 4 사이의 값
@@ -34,16 +41,12 @@ export const ThrowDices = () => {
   };
 
   useEffect(() => {
-    let interval;
     if (isPressing) {
-      interval = setInterval(() => {
+      const interval = setInterval(() => {
         setGauge((prev) => (prev < 100 ? prev + 1 : 0));
       }, 10);
-    } else {
-      clearInterval(interval);
+      return () => clearInterval(interval);
     }
-
-    return () => clearInterval(interval);
   }, [isPressing]);
 
   const formattedResults = results.reduce((acc, result, index) => {

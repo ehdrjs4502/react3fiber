@@ -1,9 +1,14 @@
 import { useSphere } from "@react-three/cannon";
+import { Mesh } from "three";
 
-export const Sphere = ({ size }) => {
+interface IProps {
+  size: number;
+}
+
+export const Sphere = ({ size }: IProps) => {
   const colors = ["red", "yellow", "blue"];
   const randomColor = colors[Math.floor(Math.random() * colors.length)];
-  const [ref, api] = useSphere(() => ({
+  const [ref, api] = useSphere<Mesh>(() => ({
     mass: 10,
     position: [Math.random() * 2 - 1, 6, Math.random() * 2 - 1],
     args: [size],
