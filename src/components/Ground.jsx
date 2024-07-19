@@ -1,14 +1,14 @@
 import { usePlane } from "@react-three/cannon";
 
-export const Ground = () => {
+export const Ground = ({ rotation, position, args }) => {
   const [ref] = usePlane(() => ({
-    rotation: [-Math.PI / 2, 0, 0],
-    position: [0, 0, 0],
+    rotation: rotation,
+    position: position,
   }));
 
   return (
     <mesh ref={ref} receiveShadow>
-      <planeGeometry args={[100, 100]} />
+      <planeGeometry args={args} />
       <meshStandardMaterial color="green" />
     </mesh>
   );
