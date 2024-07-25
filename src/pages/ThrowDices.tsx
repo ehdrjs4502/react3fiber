@@ -5,6 +5,7 @@ import { Physics } from "@react-three/cannon";
 import { Ground } from "../components/Ground";
 import { Wall } from "../components/Wall";
 import { Dice } from "../components/ThrowDices/Dice";
+import { ProgressBar } from "../components/ProgressBar";
 
 // 주사위 컴포넌트의 props 타입 정의
 interface DiceProps {
@@ -19,10 +20,19 @@ export const ThrowDices: React.FC = () => {
   const [isPressing, setIsPressing] = useState<boolean>(false);
   const [numberOfDices, setNumberOfDices] = useState<number>(2);
   const [results, setResults] = useState<number[]>([]);
+  const [isThrow, setIsThrow] = useState<boolean>(false);
 
-  const reset = () => {
+  const handleReset = () => {
     setResults([]);
     setDices([]);
+    setIsThrow(false);
+  };
+
+  const handleThrow = () => {
+    setIsPressing(false);
+    throwDice();
+    setGauge(0);
+    setIsThrow(true);
   };
 
   const throwDice = () => {
@@ -78,36 +88,31 @@ export const ThrowDices: React.FC = () => {
           {sum}
         </span>
       </div>
-      <input
-        type="number"
-        value={numberOfDices}
-        onChange={(e) => {
-          reset();
-          setNumberOfDices(parseInt(e.target.value));
-        }}
-        min="1"
-        max="10"
-      />
-      <button
-        onMouseDown={() => setIsPressing(true)}
-        onMouseUp={() => {
-          setIsPressing(false);
-          throwDice();
-          setGauge(0);
-        }}
-        onTouchStart={() => setIsPressing(true)}
-        onTouchEnd={() => {
-          setIsPressing(false);
-          throwDice();
-          setGauge(0);
-        }}
-        style={{ userSelect: "none" }}
-      >
-        주사위 굴리기
-      </button>
-      <button onClick={reset}>초기화</button>
-      <div>
-        <span>게이지: {gauge}</span>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <input
+          type="number"
+          value={numberOfDices}
+          onChange={(e) => {
+            handleReset();
+            setNumberOfDices(parseInt(e.target.value));
+          }}
+          min="1"
+          max="10"
+        />
+        <button
+          onMouseDown={() => setIsPressing(true)}
+          onMouseUp={handleThrow}
+          onTouchStart={() => setIsPressing(true)}
+          onTouchEnd={handleThrow}
+          style={{ userSelect: "none", marginLeft: "14px", marginRight: "14px" }}
+          disabled={isThrow}
+        >
+          주사위 굴리기
+        </button>
+        <button onClick={handleReset}>초기화</button>
+      </div>
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "14px", marginBottom: "14px" }}>
+        <ProgressBar value={gauge} />
       </div>
       <Canvas camera={{ position: [0, 50, 0], fov: 15 }} shadows>
         <ambientLight intensity={0.5} />
