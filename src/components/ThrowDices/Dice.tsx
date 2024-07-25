@@ -27,7 +27,7 @@ export const Dice = ({ gauge, position, setResults }: IProps) => {
     const x = Math.cos(rad) * gauge;
     const z = Math.sin(rad) * gauge;
     api.applyImpulse([x, 150, z], [0, 0, 0]);
-    api.applyImpulse([0, Math.random() * 5, 0], [x, 0, z]);
+    api.applyImpulse([0, gauge / 20, 0], [x, 0, z]);
   }, [api, gauge]);
 
   useEffect(() => {
