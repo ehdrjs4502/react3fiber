@@ -6,7 +6,7 @@ import * as THREE from "three";
 interface IProps {
   gauge: number;
   position: [x: number, y: number, z: number];
-  setResults: React.Dispatch<React.SetStateAction<number[]>>;
+  setResults?: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
 export const Dice = ({ gauge, position, setResults }: IProps) => {
@@ -92,7 +92,7 @@ export const Dice = ({ gauge, position, setResults }: IProps) => {
       }
     });
 
-    setResults((result) => [...result, diceScale[maxIndex]]);
+    if (setResults) setResults((result) => [...result, diceScale[maxIndex]]);
 
     console.log("눈금:", diceScale[maxIndex]);
   };
