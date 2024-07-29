@@ -64,23 +64,7 @@ export const ThrowDices: React.FC = () => {
   const sum = results.reduce((acc, curr) => acc + curr, 0);
 
   return (
-    <div style={{ marginTop: "80px", height: "400px" }}>
-      <div
-        style={{
-          position: "absolute",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          zIndex: "-999",
-          top: "50px",
-          fontSize: "18px",
-        }}
-      >
-        <span>
-          {results.length > 1 && formattedResults}
-          {sum}
-        </span>
-      </div>
+    <div style={{ height: "400px" }}>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <input
           type="number"
@@ -103,6 +87,19 @@ export const ThrowDices: React.FC = () => {
           주사위 굴리기
         </button>
         <button onClick={handleReset}>초기화</button>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          fontSize: "18px",
+          marginTop: "14px",
+        }}
+      >
+        <span>
+          {results.length > 1 && formattedResults}
+          {sum}
+        </span>
       </div>
       <div style={{ display: "flex", justifyContent: "center", marginTop: "14px", marginBottom: "14px" }}>
         <ProgressBar value={gauge} />
