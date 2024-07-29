@@ -1,18 +1,11 @@
-import React, { useEffect, useState, useRef, ReactNode } from "react";
+import React, { useEffect, useState, ReactNode } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Text, useGLTF } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { Physics } from "@react-three/cannon";
 import { Ground } from "../components/Ground";
 import { Wall } from "../components/Wall";
 import { Dice } from "../components/ThrowDices/Dice";
 import { ProgressBar } from "../components/ProgressBar";
-
-// 주사위 컴포넌트의 props 타입 정의
-interface DiceProps {
-  gauge: number;
-  position: [number, number, number];
-  setResults: React.Dispatch<React.SetStateAction<number[]>>;
-}
 
 export const ThrowDices: React.FC = () => {
   const [dices, setDices] = useState<ReactNode[]>([]);
